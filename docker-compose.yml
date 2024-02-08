@@ -1,0 +1,38 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+networks:
+  backend:
+    
+services:
+  lawschooldb:
+    container_name: lawschool-db
+    image: mysql:8.0.36-oracle
+    environment:
+      - MYSQL_ROOT_PASSWORD=paswword@teepane2547
+    networks:
+      - backend
+    ports:
+      - 3306:3306
+    volumes:
+      - lawdb:/data/mysql
+
+  lawschool:
+    container_name: lawschool-api
+    image: taiwopeter/lawschool
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    networks:
+      - backend
+    environment:
+      - DB_HOST=lawschooldb
+      - DB_NAME=lawschool_db
+      - DB_ROOT_PASSWORD=paswword@teepane2547
+    ports:
+      - 5125:5125
+
+volumes:
+  lawdb:

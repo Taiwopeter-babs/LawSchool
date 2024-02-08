@@ -1,0 +1,6 @@
+@LawSchool_HostAddress = http://localhost:5125
+
+GET {{LawSchool_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

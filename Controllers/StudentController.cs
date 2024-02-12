@@ -1,11 +1,12 @@
+using AutoMapper;
 using LawSchool.Data;
 using LawSchool.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using LawSchool.ModelsDto;
 
 
 namespace LawSchool.Controllers;
-
 
 
 [ApiController]
@@ -13,112 +14,82 @@ namespace LawSchool.Controllers;
 public class StudentController : ControllerBase
 {
     private readonly SchoolContext _context;
+    private readonly IMapper _mapper;
 
-    public StudentController(SchoolContext context) => _context = context;
+    public StudentController(SchoolContext context, IMapper mapper) =>
+        (_context, _mapper) = (context, mapper);
+
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
     {
-        try
-        {
-            var students = await _context.Students
-                    .AsNoTracking()
-                    .Select(st => ToStudentDTO(st)).ToListAsync();
-            return StatusCode(200, students);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            return StatusCode(500);
-        }
+
+        var students = await _context.Students
+                .AsNoTracking()
+                .ToListAsync();
+
+        var studentsDTO = _mapper.Map<IEnumerable<StudentDTO>>(students);
+
+        return StatusCode(200, studentsDTO);
+
     }
 
     [HttpPost]
     public async Task<ActionResult> AddStudent([FromBody] StudentDTO studentDTO)
     {
-        try
+
+        var studentExists = await _context.Students.FirstOrDefaultAsync(st => st.Email == studentDTO.Email);
+        if (studentExists != null)
         {
-            if (_context.Students != null)
-            {
-                var studentExists = await _context.Students.FirstOrDefaultAsync(st => st.Email == studentDTO.Email);
-                if (studentExists != null)
-                {
-                    return BadRequest();
-                }
-            }
-
-            Student student = new()
-            {
-                FirstName = studentDTO.FirstName,
-                LastName = studentDTO.LastName,
-                Email = studentDTO.Email,
-                Department = studentDTO.Department,
-                GPA = studentDTO.GPA
-            };
-
-
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(AddStudent), ToStudentDTO(student));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.GetType().ToString());
-            Console.WriteLine(ex);
-            return StatusCode(500);
+            return BadRequest();
         }
 
+        string[] names = studentDTO.FullName.Split(' ');
+
+        Student student = new()
+        {
+            FirstName = names[0],
+            LastName = string.IsNullOrEmpty(names[1]) ? "" : names[1],
+            Email = studentDTO.Email,
+            Department = studentDTO.Department,
+            GPA = studentDTO.GPA
+        };
+
+
+        await _context.Students.AddAsync(student);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(AddStudent), _mapper.Map<StudentDTO>(student));
     }
+
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<StudentDTO>> GetStudent(int id)
     {
         var student = await _context.Students.FindAsync(id);
-        if (student == null)
-        {
-            return NotFound();
-        }
-        return StatusCode(200, ToStudentDTO(student));
+
+        var studentDTO = _mapper.Map<StudentDTO>(student);
+
+        return StatusCode(200, studentDTO);
     }
 
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateStudent(int id, [FromBody] StudentDTO studentDTO)
     {
-        try
+
+        var student = await _context.Students.FindAsync(id);
+        if (student == null)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            student.FirstName = studentDTO.FirstName;
-            student.LastName = studentDTO.LastName;
-
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NotFound();
         }
-        catch (Exception ex)
-        {
-            if (ex.GetType().ToString() == "DbUpdateConcurrencyException")
-            {
-                return StatusCode(500);
-            }
-            return StatusCode(500);
-        }
-    }
+        string[] names = studentDTO.FullName.Split(' ');
 
-    private static StudentDTO ToStudentDTO(Student student)
-    {
-        return new StudentDTO
-        {
-            Id = student.Id,
-            FirstName = student.FirstName!,
-            LastName = student.LastName!,
-            Department = student.Department!,
-            Email = student.Email!,
-            GPA = student.GPA
-        };
-    }
+        student.FirstName = names[0];
+        student.LastName = string.IsNullOrEmpty(names[1]) ? "" : names[1];
 
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+
+
+    }
 }

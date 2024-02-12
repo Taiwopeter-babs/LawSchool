@@ -1,13 +1,19 @@
+using LawSchool.Contracts;
 using LawSchool.Data;
 using LawSchool.Extensions;
 using Microsoft.EntityFrameworkCore;
+using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configure log manager
+LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(),
+    "/nlog.config"));
 
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.ConfigureLoggingService();
 
 // Add database dependency injection
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
@@ -25,7 +31,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.ConfigureExceptionHandler();
+var logger = app.Services.GetRequiredService<ILoggerManager>();
+app.ConfigureExceptionHandler(logger);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

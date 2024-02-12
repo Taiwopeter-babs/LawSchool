@@ -4,6 +4,7 @@ using LawSchool.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LawSchool.ModelsDto;
+using LawSchool.Exceptions;
 
 
 namespace LawSchool.Controllers;
@@ -65,7 +66,8 @@ public class StudentController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<StudentDTO>> GetStudent(int id)
     {
-        var student = await _context.Students.FindAsync(id);
+        var student = await _context.Students.FindAsync(id) ??
+                throw new StudentNotFoundException(id);
 
         var studentDTO = _mapper.Map<StudentDTO>(student);
 
@@ -76,11 +78,9 @@ public class StudentController : ControllerBase
     public async Task<ActionResult> UpdateStudent(int id, [FromBody] StudentDTO studentDTO)
     {
 
-        var student = await _context.Students.FindAsync(id);
-        if (student == null)
-        {
-            return NotFound();
-        }
+        var student = await _context.Students.FindAsync(id) ??
+                throw new StudentNotFoundException(id); ;
+
         string[] names = studentDTO.FullName.Split(' ');
 
         student.FirstName = names[0];
@@ -89,7 +89,5 @@ public class StudentController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
-
-
     }
 }

@@ -8,7 +8,10 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Student, StudentDTO>()
-        .ForCtorParam("FullName", opt => opt.MapFrom(s => string.Join(' ', s.FirstName, s.LastName)));
+        CreateMap<Student, StudentDto>()
+        .ForMember(st => st.FullName,
+            opt => opt.MapFrom(s => string.Join(' ', s.FirstName, s.LastName)));
+
+        CreateMap<StudentForCreationDto, Student>();
     }
 }

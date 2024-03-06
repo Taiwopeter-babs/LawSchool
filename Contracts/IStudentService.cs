@@ -7,7 +7,7 @@ public interface IStudentService
 {
     Task<StudentDto> GetStudentAsync(int id, bool trackChanges);
 
-    Task<(IEnumerable<StudentDto> studentsDto, PageMetaData pageMetaData)>
+    Task<(IEnumerable<StudentDto> students, PageMetaData pageMetaData)>
         GetAllStudentsAsync(StudentParameters studentParameters, bool trackChanges);
 
     Task<StudentDto> CreateStudentAsync(StudentForCreationDto studentDTO, bool trackChanges);

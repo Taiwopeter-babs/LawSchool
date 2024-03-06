@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using LawSchool.ModelsDto;
 using LawSchool.Contracts;
 using LawSchool.Utilities.Filters;
@@ -14,8 +15,10 @@ public class StudentController : ControllerBase
 {
     private readonly IServiceManager _service;
 
-    public StudentController(IServiceManager service) =>
+    public StudentController(IServiceManager service)
+    {
         _service = service;
+    }
 
 
     [HttpGet]
@@ -24,7 +27,7 @@ public class StudentController : ControllerBase
         var (students, pageMetaData) = await _service.StudentService
                 .GetAllStudentsAsync(studentParameters, trackChanges: false);
 
-        Response.Headers.Add("X-Pagination", Json.Serializer.Serialize(pageMetaData));
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageMetaData));
 
         return StatusCode(200, students);
     }

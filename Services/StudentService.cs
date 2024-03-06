@@ -5,6 +5,7 @@ using LawSchool.Models;
 using LawSchool.ModelsDto;
 using LawSchool.Utilities;
 
+
 namespace LawSchool.Services;
 
 internal sealed class StudentService : IStudentService
@@ -36,12 +37,12 @@ internal sealed class StudentService : IStudentService
     public async Task<(IEnumerable<StudentDto> students, PageMetaData pageMetaData)>
         GetAllStudentsAsync(StudentParameters studentParameters, bool trackChanges)
     {
-        var studentsWithPageMetadata = await _repository.Student
+        var studentsWithPageMetaData = await _repository.Student
                     .GetAllStudentsAsync(studentParameters, trackChanges);
 
-        var studentsDto = _mapper.Map<IEnumerable<StudentDto>>(studentsWithPageMetadata);
+        var studentsDto = _mapper.Map<IEnumerable<StudentDto>>(studentsWithPageMetaData);
 
-        return (students, pageMetaData: studentsWithPageMetadata.PageMetaData);
+        return (students: studentsDto, pageMetaData: studentsWithPageMetaData.PageMetaData);
     }
 
     public async Task<StudentDto> GetStudentAsync(int id, bool trackChanges)

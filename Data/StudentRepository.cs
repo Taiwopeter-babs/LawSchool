@@ -16,7 +16,7 @@ public class StudentRepository : SchoolBase<Student>, IStudentRepository
 
     public void DeleteStudent(Student student) => Delete(student);
 
-    public async Task<IEnumerable<Student>> GetAllStudentsAsync(StudentParameters studentParameters,
+    public async Task<PagedList<Student>> GetAllStudentsAsync(StudentParameters studentParameters,
          bool trackChanges)
     {
         var students = await FindAll(trackChanges)

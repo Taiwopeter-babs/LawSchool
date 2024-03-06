@@ -5,7 +5,7 @@ namespace LawSchool.Contracts;
 
 public interface IStudentRepository
 {
-    Task<IEnumerable<Student>> GetAllStudentsAsync(StudentParameters studentParameters,
+    Task<PagedList<Student>> GetAllStudentsAsync(StudentParameters studentParameters,
         bool trackChanges);
     Task<Student?> GetStudentAsync(int studentId, bool trackChanges);
     Task<Student?> GetStudentByEmailAsync(string studentEmail, bool trackChanges);

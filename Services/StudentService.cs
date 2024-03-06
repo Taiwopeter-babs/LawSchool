@@ -37,6 +37,9 @@ internal sealed class StudentService : IStudentService
     public async Task<(IEnumerable<StudentDto> students, PageMetaData pageMetaData)>
         GetAllStudentsAsync(StudentParameters studentParameters, bool trackChanges)
     {
+        if (!studentParameters.ValidGpaRange)
+            throw new MaxGpaRangeBadRequest();
+
         var studentsWithPageMetaData = await _repository.Student
                     .GetAllStudentsAsync(studentParameters, trackChanges);
 

@@ -2,6 +2,7 @@ using LawSchool.Contracts;
 using LawSchool.Models;
 using Microsoft.EntityFrameworkCore;
 using LawSchool.Utilities;
+using LawSchool.Extensions;
 
 namespace LawSchool.Data;
 
@@ -20,6 +21,8 @@ public class StudentRepository : SchoolBase<Student>, IStudentRepository
          bool trackChanges)
     {
         var students = await FindAll(trackChanges)
+            .FilterStudentsByGpa(studentParameters.MinGpa, studentParameters.MaxGpa)
+            .FilterStudentsByDepartment(studentParameters.Department)
             .OrderBy(st => st.FirstName)
             .ToListAsync();
 

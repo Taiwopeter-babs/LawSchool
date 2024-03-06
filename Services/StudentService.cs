@@ -33,14 +33,15 @@ internal sealed class StudentService : IStudentService
         return _mapper.Map<StudentDto>(studentEntity);
     }
 
-    public async Task<IEnumerable<StudentDto>> GetAllStudentsAsync(StudentParameters studentParameters,
-            bool trackChanges)
+    public async Task<(IEnumerable<StudentDto> students, PageMetaData pageMetaData)>
+        GetAllStudentsAsync(StudentParameters studentParameters, bool trackChanges)
     {
-        var students = await _repository.Student.GetAllStudentsAsync(studentParameters, trackChanges);
+        var studentsWithPageMetadata = await _repository.Student
+                    .GetAllStudentsAsync(studentParameters, trackChanges);
 
-        var studentsDto = _mapper.Map<IEnumerable<StudentDto>>(students);
+        var studentsDto = _mapper.Map<IEnumerable<StudentDto>>(studentsWithPageMetadata);
 
-        return studentsDto;
+        return (students, pageMetaData: studentsWithPageMetadata.PageMetaData);
     }
 
     public async Task<StudentDto> GetStudentAsync(int id, bool trackChanges)

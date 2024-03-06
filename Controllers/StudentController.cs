@@ -21,8 +21,10 @@ public class StudentController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetStudents([FromQuery] StudentParameters studentParameters)
     {
-        var students = await _service.StudentService
+        var (students, pageMetaData) = await _service.StudentService
                 .GetAllStudentsAsync(studentParameters, trackChanges: false);
+
+        Response.Headers.Add("X-Pagination", Json.Serializer.Serialize(pageMetaData));
 
         return StatusCode(200, students);
     }

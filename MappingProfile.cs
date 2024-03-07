@@ -13,5 +13,6 @@ public class MappingProfile : Profile
             opt => opt.MapFrom(s => string.Join(' ', s.FirstName, s.LastName)));
 
         CreateMap<StudentForCreationDto, Student>();
+        CreateMap<StudentForUpdateDto, Student>().ReverseMap();
     }
 }

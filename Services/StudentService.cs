@@ -64,4 +64,21 @@ internal sealed class StudentService : IStudentService
 
         await _repository.SaveAsync();
     }
+
+    public async Task<(StudentForUpdateDto studentToPatch, Student studentEntity)> GetStudentForPatch(
+        int id, bool trackChanges)
+    {
+        var student = await _repository.Student.GetStudentAsync(id, trackChanges) ??
+            throw new StudentNotFoundException(id);
+
+        var studentPatch = _mapper.Map<StudentForUpdateDto>(student);
+
+        return (studentToPatch: studentPatch, studentEntity: student);
+    }
+
+    public async Task SaveChangesForPatch(StudentForUpdateDto studentToPatch, Student studentEntity)
+    {
+        _mapper.Map(studentToPatch, studentEntity);
+        await _repository.SaveAsync();
+    }
 }

@@ -1,3 +1,4 @@
+using LawSchool.Models;
 using LawSchool.ModelsDto;
 using LawSchool.Utilities;
 
@@ -11,6 +12,12 @@ public interface IStudentService
         GetAllStudentsAsync(StudentParameters studentParameters, bool trackChanges);
 
     Task<StudentDto> CreateStudentAsync(StudentForCreationDto studentDTO, bool trackChanges);
+
+    Task<(StudentForUpdateDto studentToPatch, Student studentEntity)> GetStudentForPatch(
+        int id, bool trackChanges
+    );
+
+    Task SaveChangesForPatch(StudentForUpdateDto studentToPatch, Student studentEntity);
 
     Task DeleteStudentAsync(int id, bool trackChanges);
 }

@@ -11,7 +11,12 @@ public static class RepositoryStudentExtensions
     }
 
     public static IQueryable<Student> FilterStudentsByDepartment(this IQueryable<Student> students,
-        string department) =>
-            students.Where(st => st.Department.Equals(department, StringComparison.InvariantCultureIgnoreCase));
+        string department)
+    {
+        if (department is null)
+            return students;
 
+        return students
+            .Where(st => st.Department.Equals(department, StringComparison.InvariantCultureIgnoreCase));
+    }
 }

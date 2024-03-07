@@ -1,6 +1,7 @@
 using LawSchool.Contracts;
 using LawSchool.Data;
 using LawSchool.Extensions;
+using LawSchool.Utilities;
 using LawSchool.Utilities.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,15 @@ LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentD
     "/nlog.config"));
 
 // Add services to the container.
-builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ConfigureLoggingService();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureRepositoryManager();
+
+builder.Services.AddControllers(options =>
+{
+    options.InputFormatters.Insert(0, JsonPatchConfiguration.GetJsonPatchInputFormatter());
+});
 
 // suppress ApiController attribute errors to allow custom error messages
 builder.Services.Configure<ApiBehaviorOptions>(options =>

@@ -71,10 +71,10 @@ The request query parameters are available to filter results
   - minGpa: The lowest gpa score for results
   - maxGpa: The highest gpa score for results
   
-For example, you want to have 10 students per page and you want to go to page 1, and you want the results of your request to contain only students from civil law that have a gpa between 4.00 and 4.45, then your request url will look like this:
+For example, you want to have 10 students per page and you want to go to page 1, and you want the results of your request to contain only students from civil law that have gpa scores between 4.00 and 4.45 i.e ```4.00 <= gpa >= 4.45```, then your request url will look like this:
 
 `
-localhost:5125/api/v1/students?pageNumber=1&pageSize=10&department=civil%20law&minGpa=4
+localhost:5125/api/v1/students?pageNumber=1&pageSize=10&department=civil%20law&minGpa=4&maxGpa=4.45
 `
 
 Note that `%20` means space character.

@@ -17,7 +17,7 @@ public interface IStudentService
         int id, bool trackChanges
     );
 
-    Task SaveChangesForPatch(StudentForUpdateDto studentToPatch, Student studentEntity);
+    Task SaveChangesForPatchAsync(StudentForUpdateDto studentToPatch, Student studentEntity);
 
     Task DeleteStudentAsync(int id, bool trackChanges);
 }

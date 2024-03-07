@@ -21,7 +21,9 @@ builder.Services.ConfigureRepositoryManager();
 
 builder.Services.AddControllers(options =>
 {
+    options.RespectBrowserAcceptHeader = true;
     options.InputFormatters.Insert(0, JsonPatchConfiguration.GetJsonPatchInputFormatter());
+
 });
 
 // suppress ApiController attribute errors to allow custom error messages

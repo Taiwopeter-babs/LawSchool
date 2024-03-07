@@ -76,7 +76,7 @@ internal sealed class StudentService : IStudentService
         return (studentToPatch: studentPatch, studentEntity: student);
     }
 
-    public async Task SaveChangesForPatch(StudentForUpdateDto studentToPatch, Student studentEntity)
+    public async Task SaveChangesForPatchAsync(StudentForUpdateDto studentToPatch, Student studentEntity)
     {
         _mapper.Map(studentToPatch, studentEntity);
         await _repository.SaveAsync();

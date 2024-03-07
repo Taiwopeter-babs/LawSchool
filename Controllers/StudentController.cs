@@ -73,7 +73,7 @@ public class StudentController : ControllerBase
 
         patchDoc.ApplyTo(studentToPatch);
 
-        await _service.StudentService.SaveChangesForPatch(studentToPatch, studentEntity);
+        await _service.StudentService.SaveChangesForPatchAsync(studentToPatch, studentEntity);
 
         return NoContent();
     }

@@ -1,10 +1,13 @@
 # Welcome to the LawSchool API
 
-This is a simple api built with C# language and .NET framework that. Please feel free to clone or fork the repository for your own learning purposes. This is **FOR LEARNING ONLY**, it is not fit for production grade software. I welcome criticisms and suggestions to improve my code.
+This is a simple api built with C# language and .NET framework. Please feel free to clone or fork the repository for your own learning purposes. This is **FOR LEARNING ONLY**, it is not fit for production grade software. I welcome criticisms and suggestions to improve my code.
 
 ## Note
 
-- The API program can run in a docker container and it is the recommended usage.
+- The API runs in a docker container and it is the recommended usage. If custom configurations are to be made for local connections, configure the following MySQL parameters:
+  - DB_HOST
+  - DB_NAME
+  - DB_ROOT_PASSWORD
 - Make sure you have docker (docker desktop for windows) installed on your local machine.
 
 ## Usage
@@ -27,8 +30,8 @@ docker compose up --build
 
 ```json
 {
-    "firstName": "student first name",
-    "lastName": "student last name",
+    "firstName": "student's first name",
+    "lastName": "student's last name",
     "email": "student's email",
     "department": "student's department (preferably a law department)",
     "GPA": 4.00 // A floating point number in two decimal places ,
@@ -40,9 +43,9 @@ docker compose up --build
 ```json
 {
     "id": 1,
-    "fullName": "first name + last name",
+    "fullName": "firstName lastName",
     "email": "student's email",
-    "department": "student's department (preferably a law department)",
+    "department": "student's department (preferably any string that ends with 'law')",
     "GPA": 4.00 // A floating point number in two decimal places ,
 }
 ```
@@ -54,9 +57,9 @@ docker compose up --build
 ```json
 {
     "id": 1,
-    "fullName": "first name + last name",
+    "fullName": "firstName lastName",
     "email": "student's email",
-    "department": "student's department (preferably a law department)",
+    "department": "student's department",
     "GPA": 4.00 // A floating point number in two decimal places ,
 }
 ```
@@ -85,16 +88,16 @@ Note that `%20` means space character.
 [
     {
         "id": 1,
-        "fullName": "first name + ' ' + last name",
+        "fullName": "firstName lastName",
         "email": "student's email",
-        "department": "Civil Law (preferably a law department)",
+        "department": "Civil Law",
         "GPA": 4.00 // A floating point number in two decimal places ,
     },
     {
         "id": 1,
-        "fullName": "first name + ' ' + last name",
+        "fullName": "firstName lastName",
         "email": "student's email",
-        "department": "Civil Law (preferably a law department)",
+        "department": "Civil Law",
         "GPA": 4.00 // A floating point number in two decimal places ,
     }
     ...
@@ -109,9 +112,9 @@ Note that `%20` means space character.
 ```json
 {
     "id": 1,
-    "fullName": "first name + ' ' + last name",
+    "fullName": "firstName lastName",
     "email": "student's email",
-    "department": "Civil Law (preferably a law department)",
+    "department": "Civil Law",
     "GPA": 4.00 // A floating point number in two decimal places ,
 }
 ```
